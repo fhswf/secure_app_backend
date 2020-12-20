@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS-Test-WebView</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    Ich bin ein WebView. In mir kann JavaScript ausgeführt oder verboten werden. <br>
+    Der nachfolgende Button öffnet ein Alert-Fenster mit der Ausgabe "Hello World", wenn Java-Script aktiviert wurde. <br>
+
+    <br>
+
+    <button onclick="alert_function()">Hello World in Java-Script aufrufen</button>
+
+    <!-- JavaScript-Funktion, die ein Alert auslöst.-->
+    <script>
+        function alert_function()
+        {
+            alert("JavaScript ist aktiviert! Dies sollte nicht so sein!")
+        }
+    </script>
+</body>
+</html>
