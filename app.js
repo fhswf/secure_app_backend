@@ -9,6 +9,19 @@ const jwtAuthz = require('express-jwt-authz');
 const jwksRsa = require('jwks-rsa');
 const port = 3000
 const url = 'mongodb://localhost:27017/api_testDB'
+const fs = require('fs');
+
+const dataPath = require("./data"); 
+  
+app.get('/data', (req, res) => {
+  fs.readFile(dataPath, 'utf8', (err, data) => {
+    if (err) {
+      throw err;
+    }
+
+    res.send(JSON.parse(data));
+  });
+});
 
 const checkJwt = jwt({
   // Dynamically provide a signing key
