@@ -1,6 +1,5 @@
 // Imports
 const express = require('express')
-const mongoose = require('mongoose')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const app = express()
@@ -11,17 +10,33 @@ const port = 3000
 const url = 'mongodb://localhost:27017/api_testDB'
 const fs = require('fs');
 
-const dataPath = require("./data"); 
-  
-app.get('/data', (req, res) => {
-  fs.readFile(dataPath, 'utf8', (err, data) => {
-    if (err) {
-      throw err;
-    }
+const date = new Date;
 
-    res.send(JSON.parse(data));
+const aktuelles_datum = {
+  jahr: "2020"
+    // jahr: date.getUTCFullYear(),
+    // monat: date.getUTCMonth() + 1,
+    // tag: date.getUTCDate(),
+    // stunden: date.getUTCHours()+1,
+    // minuten: date.getUTCMinutes(),
+    // sekunden: date.getUTCSeconds()
+};
+
+ app.get('/api/public', function(req, res) {
+  res.json({
+
+    jahr: date.getUTCFullYear(),
+    // monat: date.getUTCMonth() + 1,
+    // tag: date.getUTCDate(),
+    // stunden: date.getUTCHours()+1,
+    // minuten: date.getUTCMinutes(),
+    // sekunden: date.getUTCSeconds()
+
+    //aktuelles_datum,
+    //test_string
+   });
   });
-});
+
 
 const checkJwt = jwt({
   // Dynamically provide a signing key
@@ -42,19 +57,9 @@ const checkJwt = jwt({
 
 app.get('/api/private', checkJwt, function(req, res) {
   res.json({
-    message: 'Willkommen im Bereich für regristrierte Nutzer. Wie es aussieht, haben Sie einen gültigen Account.'
+    message: 'Willkommen im Bereich für registrierte Nutzer. Wie es aussieht, haben Sie einen gültigen Account.'
   });
 });
-
-//Mit der MongoDB verbinden und Meldungen ausgeben
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
-const db = mongoose.connection
-db.once('open', _ => {
-  console.log('Datenbank verbunden:', url)
-})
-db.on('error', err => {
-    console.error('Verbindungsfehler:', err)
-})
 
 app.use(express.urlencoded({ extended: true}))
 app.use(express.json())
@@ -62,7 +67,6 @@ app.use(express.json())
 //Route zur API deklarieren
 const messageRouter = require('./routes/messages')
 app.use('/messages', messageRouter)
-
 
 // Static Files deklarieren
 app.use(express.static('public'))
@@ -78,8 +82,20 @@ app.use(bodyParser.json())
 app.set('views', './views')
 app.set('view engine', 'ejs')
 
+app.get('/api/public/uhrzeit', (req, res) => {
+   res.json({     
+     jahr: date.getUTCFullYear(),
+     monat: date.getUTCMonth() + 1,
+     tag: date.getUTCDate(),
+     stunden: date.getUTCHours()+1,
+     minuten: date.getUTCMinutes(),
+     sekunden: date.getUTCSeconds()
+   });
+})
+
+
 app.get('', (req, res) => {
-   res.render('index', {text: 'Index.html zum Testen von JavaScript'})
+  res.render('index', {text: 'Startseite des Backends'})
 })
 
 app.get('/insecure_communication_test', (req, res) => {
