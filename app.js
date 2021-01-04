@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const app = express()
 const port = 3000
 const fs = require('fs');
-const date = new Date;
+//let date = new Date;
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -27,6 +27,7 @@ app.set('views', './views')
 app.set('view engine', 'ejs')
 
 app.get('/api/public/uhrzeit', (req, res) => {
+  let date = new Date();
   res.json({
     jahr: date.getUTCFullYear(),
     monat: date.getUTCMonth() + 1,
@@ -37,9 +38,10 @@ app.get('/api/public/uhrzeit', (req, res) => {
   });
 })
 
-app.get('', (req, res) => {
+app.get('/index.html', (req, res) => {
   res.render('index', { text: 'Startseite des Backends' })
 })
+
 
 //Fehlermeldungen für die Statuscodes 401 und 404
 app.use(function (req, res, next) {
