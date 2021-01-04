@@ -7,13 +7,6 @@ const port = 3000
 const fs = require('fs');
 const date = new Date;
 
-
-app.get('/api/private', checkJwt, function(req, res) {
-  res.json({
-    message: 'Willkommen im Bereich für registrierte Nutzer. Wie es aussieht, haben Sie einen gültigen Account.'
-  });
-});
-
 app.use(express.urlencoded({ extended: true}))
 app.use(express.json())
 
