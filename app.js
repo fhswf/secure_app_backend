@@ -3,57 +3,10 @@ const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const app = express()
-const jwt = require('express-jwt');
-const jwtAuthz = require('express-jwt-authz');
-const jwksRsa = require('jwks-rsa');
 const port = 3000
-const url = 'mongodb://localhost:27017/api_testDB'
 const fs = require('fs');
-
 const date = new Date;
 
-const aktuelles_datum = {
-  jahr: "2020"
-    // jahr: date.getUTCFullYear(),
-    // monat: date.getUTCMonth() + 1,
-    // tag: date.getUTCDate(),
-    // stunden: date.getUTCHours()+1,
-    // minuten: date.getUTCMinutes(),
-    // sekunden: date.getUTCSeconds()
-};
-
- app.get('/api/public', function(req, res) {
-  res.json({
-
-    jahr: date.getUTCFullYear(),
-    // monat: date.getUTCMonth() + 1,
-    // tag: date.getUTCDate(),
-    // stunden: date.getUTCHours()+1,
-    // minuten: date.getUTCMinutes(),
-    // sekunden: date.getUTCSeconds()
-
-    //aktuelles_datum,
-    //test_string
-   });
-  });
-
-
-const checkJwt = jwt({
-  // Dynamically provide a signing key
-  // based on the kid in the header and 
-  // the signing keys provided by the JWKS endpoint.
-  secret: jwksRsa.expressJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: `https://dev-dqjyvzmz.eu.auth0.com/.well-known/jwks.json`
-  }),
-
-    // Validate the audience and the issuer.
-    audience: 'http://127.0.0.1:3000/api/private',
-    issuer: `https://dev-dqjyvzmz.eu.auth0.com/`,
-    algorithms: ['RS256']
-  });
 
 app.get('/api/private', checkJwt, function(req, res) {
   res.json({
@@ -93,13 +46,8 @@ app.get('/api/public/uhrzeit', (req, res) => {
    });
 })
 
-
 app.get('', (req, res) => {
   res.render('index', {text: 'Startseite des Backends'})
-})
-
-app.get('/insecure_communication_test', (req, res) => {
-  res.render('insecure_communication_test', {text: 'Seite zum Testen von HTTPS'})
 })
 
 //Fehlermeldungen für die Statuscodes 401 und 404
@@ -108,9 +56,8 @@ app.use(function(req, res, next) {
   });
 
 app.use(function(req, res, next) {
-    res.status(401).send('Diese Seite existiert nicht!');
+    res.status(401).send('Fehlende Rechte für diesen Bereich!');
 });
-  
   
 // Konsolenausgaben
 app.listen(port, () => console.info(`Backend laueft auf Port ${port}`))
