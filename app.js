@@ -14,7 +14,6 @@ var jwks = require('jwks-rsa');
 /**
  * Implementiert die Auth0.com-Funktionen.
  */
-
 var jwtCheck = jwt({
    secret: jwks.expressJwtSecret({
       cache: true,
@@ -67,10 +66,14 @@ app.get('/api/private', jwtCheck, function(req, res) {
   });
 });
 
-//Fehlermeldungen für die Statuscodes 401 und 404
+/**
+ * Fehlermeldung für den Statuscode 404
+ */
 app.use(function (req, res, next) {
   res.status(404).send('Diese Seite existiert nicht!');
 });
 
-// Konsolenausgaben
+/**
+ * Konsolenausgabe
+ */
 app.listen(port, () => console.info(`Backend laueft auf Port ${port}`))
