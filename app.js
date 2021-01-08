@@ -1,8 +1,9 @@
 /**
  * Backend zur SecureApp.
- * Diese Datei implementiert den Webserver mit Hilfe von NodeJS.
+ * Diese Datei implementiert den Webserver mit einem öffentlichen und einem privaten API-Endpunkt.
  * 
- * @author Marcel Hopp 
+ * @author Marcel Hopp
+ * @version 1.0
  */
 
 const express = require('express')
@@ -22,7 +23,7 @@ var jwtCheck = jwt({
       jwksRequestsPerMinute: 5,
       jwksUri: 'https://dev-dqjyvzmz.eu.auth0.com/.well-known/jwks.json'
  }),
-  audience: 'http://127.0.0.1:3000/api/private', 
+  audience: 'https://jupiter.fh-swf.de/secureapp/api/private',
   issuer: 'https://dev-dqjyvzmz.eu.auth0.com/',
   algorithms: ['RS256']
  });
@@ -40,26 +41,32 @@ app.use(express.json())
  * Implementiert einen öffentlichen API-Endpunkt, der beim Aufruf das aktuelle Datum mit aktueller Uhrzeit ausgibt.
  */
 app.get('/api/public', (req, res) => {
+  // Erstellt beim Aufruf der API ein neues Datum
   let date = new Date();
 
+  // Array für die einzelnen Wochentage, als spätere Ausgabe im JSON-Format
   let wochentage_array = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-  let wochentag = wochentage_array[date.getDay()];
-
-  let year = date.getFullYear().toString();
-  let month = (date.getMonth() + 1).toString().padStart(2, "0");
-  let day   = date.getDate().toString().padStart(2, "0");
-  let hours = date.getHours().toString().padStart(2, "0");
-  let minutes = date.getMinutes().toString().padStart(2, "0");
-  let seconds = date.getSeconds().toString().padStart(2, "0");
   
+  // Gibt den aktuellen Wochentag zurück
+  let aktueller_wochentag = wochentage_array[date.getDay()];
+
+  // Konvertiert Jahr, Monat, Tag, Stunden, Minuten und Sekunden in einen String und fügt mit Hilfe der padStart()-Methode führende Nullen ein, sobald die Werte < 10 sind.
+  let aktuelles_jahr = date.getFullYear().toString();
+  let aktueller_monat = (date.getMonth() + 1).toString().padStart(2, "0");
+  let aktueller_tag   = date.getDate().toString().padStart(2, "0");
+  let aktuelle_stunden = date.getHours().toString().padStart(2, "0");
+  let aktuelle_minuten = date.getMinutes().toString().padStart(2, "0");
+  let aktuelle_sekunden = date.getSeconds().toString().padStart(2, "0");
+  
+  // Gibt den Datensatz im JSON-Format aus.
   res.json({
-    wochentag: wochentag,
-    tag: day,
-    monat: month,
-    jahr: year, 
-    stunden: hours, 
-    minuten: minutes,
-    sekunden: seconds
+    wochentag: aktueller_wochentag,
+    tag: aktueller_tag,
+    monat: aktueller_monat,
+    jahr: aktuelles_jahr, 
+    stunden: aktuelle_stunden, 
+    minuten: aktuelle_minuten,
+    sekunden: aktuelle_sekunden
     });
 })
 
